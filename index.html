@@ -1,1035 +1,186 @@
 <!DOCTYPE html>
-<html lang="fr" dir="ltr">
+<html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quiz Complet sur la Physiologie Cardiaque</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Calcul Moyenne – 2ème Année Dentaire</title>
+  <style>
+    :root {
+      --primary: #5b2d89;
+      --secondary: #8f6ccf;
+      --bg: #f3f1f7;
+      --card: #ffffff;
+      --text: #2b2b2b;
+      --danger: #d64545;
+      --success: #2e9e5b;
+    }
 
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            padding: 20px;
-            direction: ltr;
-        }
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: linear-gradient(135deg, var(--bg), #ffffff);
+      color: var(--text);
+      padding: 20px;
+    }
 
-        .container {
-            max-width: 900px;
-            margin: 0 auto;
-            background: white;
-            border-radius: 20px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-            overflow: hidden;
-        }
+    .container { max-width: 900px; margin: auto; }
 
-        .header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 40px 30px;
-            text-align: center;
-        }
+    h1 { text-align: center; margin-bottom: 5px; color: var(--primary); }
 
-        .header h1 {
-            font-size: 2.5em;
-            margin-bottom: 10px;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
-        }
+    .subtitle { text-align: center; font-size: 14px; color: #555; margin-bottom: 25px; }
 
-        .header p {
-            font-size: 1.1em;
-            opacity: 0.9;
-        }
+    .card {
+      background: var(--card);
+      border-radius: 16px;
+      padding: 20px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+    }
 
-        .progress-bar {
-            height: 8px;
-            background: rgba(255, 255, 255, 0.3);
-            margin-top: 20px;
-            border-radius: 10px;
-            overflow: hidden;
-        }
+    table { width: 100%; border-collapse: collapse; }
 
-        .progress-fill {
-            height: 100%;
-            background: #4CAF50;
-            width: 0%;
-            transition: width 0.3s ease;
-        }
+    th {
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      color: white; padding: 12px; font-size: 15px;
+    }
 
-        .content {
-            padding: 40px;
-        }
+    th:first-child { border-top-left-radius: 12px; }
+    th:last-child { border-top-right-radius: 12px; }
 
-        .question-container {
-            display: none;
-            animation: slideIn 0.3s ease;
-        }
+    td { padding: 10px; border-bottom: 1px solid #eee; text-align: center; font-size: 14px; }
+    tr:last-child td { border-bottom: none; }
 
-        .question-container.active {
-            display: block;
-        }
+    input {
+      width: 70px; padding: 6px; border-radius: 8px;
+      border: 1px solid #ccc; text-align: center; font-size: 14px;
+      transition: border 0.2s, box-shadow 0.2s, background 0.2s;
+    }
 
-        @keyframes slideIn {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
+    input:focus {
+      outline: none; border-color: var(--primary);
+      box-shadow: 0 0 0 2px rgba(91,45,137,0.15);
+    }
 
-        .question-number {
-            color: #667eea;
-            font-weight: bold;
-            font-size: 0.9em;
-            margin-bottom: 10px;
-        }
+    input.low {
+      background: #ffecec;
+      border-color: var(--danger);
+      color: var(--danger);
+      font-weight: bold;
+    }
 
-        .question-text {
-            font-size: 1.3em;
-            color: #333;
-            margin-bottom: 25px;
-            font-weight: 600;
-            line-height: 1.6;
-        }
+    .btn {
+      margin: 25px auto 10px; display: block;
+      padding: 12px 28px; font-size: 16px; border-radius: 30px;
+      border: none; cursor: pointer; color: white;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      box-shadow: 0 6px 15px rgba(0,0,0,0.15);
+      transition: transform 0.15s, box-shadow 0.15s;
+    }
 
-        .options {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
+    .btn:hover { transform: translateY(-1px); box-shadow: 0 8px 18px rgba(0,0,0,0.18); }
 
-        .option {
-            padding: 15px 20px;
-            border: 2px solid #e0e0e0;
-            border-radius: 10px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            background: white;
-        }
+    .result {
+      margin-top: 15px; text-align: center;
+      font-size: 22px; font-weight: bold; color: var(--primary);
+    }
 
-        .option:hover:not(.disabled) {
-            border-color: #667eea;
-            background: #f5f5ff;
-            transform: translateX(5px);
-        }
+    /* Progress bar */
+    .progress-container {
+      margin-top: 20px;
+      background: #e6e3ef;
+      border-radius: 20px;
+      overflow: hidden;
+      height: 20px;
+    }
 
-        .option input[type="checkbox"],
-        .option input[type="radio"] {
-            margin-right: 15px;
-            cursor: pointer;
-            width: 20px;
-            height: 20px;
-        }
+    .progress-bar {
+      height: 100%; width: 0%;
+      background: linear-gradient(135deg, var(--danger), var(--secondary));
+      transition: width 0.4s ease, background 0.4s ease;
+    }
 
-        .option label {
-            cursor: pointer;
-            flex: 1;
-            margin: 0;
-        }
+    .progress-pass { background: linear-gradient(135deg, var(--success), #6bd19a); }
 
-        .option.correct {
-            border-color: #4CAF50;
-            background: #e8f5e9;
-        }
-
-        .option.incorrect {
-            border-color: #f44336;
-            background: #ffebee;
-        }
-
-        .option.disabled {
-            pointer-events: none;
-        }
-
-        .feedback {
-            margin-top: 20px;
-            padding: 15px 20px;
-            border-radius: 10px;
-            font-size: 1.1em;
-            display: none;
-            animation: slideIn 0.3s ease;
-        }
-
-        .feedback.show {
-            display: block;
-        }
-
-        .feedback.correct {
-            background: #e8f5e9;
-            color: #2e7d32;
-            border-left: 5px solid #4CAF50;
-        }
-
-        .feedback.incorrect {
-            background: #ffebee;
-            color: #c62828;
-            border-left: 5px solid #f44336;
-        }
-
-        .feedback-message {
-            margin-bottom: 10px;
-            font-weight: 600;
-        }
-
-        .correct-answer {
-            margin-top: 10px;
-            padding: 10px;
-            background: rgba(76, 175, 80, 0.1);
-            border-radius: 5px;
-            font-size: 0.95em;
-        }
-
-        .check-button {
-            margin-top: 25px;
-            padding: 12px 40px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border: none;
-            border-radius: 10px;
-            font-size: 1.1em;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-weight: 600;
-        }
-
-        .check-button:hover:not(:disabled) {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
-        }
-
-        .check-button:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-
-        .navigation {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 30px;
-            gap: 15px;
-        }
-
-        .nav-button {
-            padding: 10px 20px;
-            background: #f0f0f0;
-            border: 2px solid #ddd;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 1em;
-            transition: all 0.3s ease;
-            font-weight: 600;
-        }
-
-        .nav-button:hover:not(:disabled) {
-            background: #667eea;
-            color: white;
-            border-color: #667eea;
-        }
-
-        .nav-button:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-
-        .results-container {
-            display: none;
-            text-align: center;
-            animation: slideIn 0.3s ease;
-        }
-
-        .results-container.show {
-            display: block;
-        }
-
-        .score-circle {
-            width: 200px;
-            height: 200px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 30px auto;
-            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
-        }
-
-        .score-text {
-            color: white;
-            font-size: 3em;
-            font-weight: bold;
-        }
-
-        .score-label {
-            color: white;
-            font-size: 1.1em;
-            margin-top: 10px;
-        }
-
-        .results-message {
-            font-size: 1.5em;
-            color: #333;
-            margin: 20px 0;
-            font-weight: 600;
-        }
-
-        .results-details {
-            background: #f5f5f5;
-            padding: 20px;
-            border-radius: 10px;
-            margin: 20px 0;
-            text-align: center;
-        }
-
-        .detail-item {
-            display: flex;
-            justify-content: center;
-            padding: 10px 0;
-            border-bottom: 1px solid #ddd;
-            font-size: 1.1em;
-        }
-
-        .detail-item:last-child {
-            border-bottom: none;
-        }
-
-        .restart-button {
-            margin-top: 30px;
-            padding: 15px 50px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border: none;
-            border-radius: 10px;
-            font-size: 1.2em;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-weight: 600;
-        }
-
-        .restart-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
-        }
-
-        .question-counter {
-            color: #999;
-            font-size: 0.9em;
-            margin-top: 10px;
-        }
-
-        @media (max-width: 768px) {
-            .header h1 {
-                font-size: 1.8em;
-            }
-
-            .content {
-                padding: 20px;
-            }
-
-            .question-text {
-                font-size: 1.1em;
-            }
-
-            .score-circle {
-                width: 150px;
-                height: 150px;
-            }
-
-            .score-text {
-                font-size: 2.2em;
-            }
-        }
-    </style>
+    @media (max-width: 600px) {
+      th, td { font-size: 13px; }
+      input { width: 60px; }
+    }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <h1>🫀 Quiz Complet sur la Physiologie Cardiaque</h1>
-            <p>Testez vos connaissances sur le système cardiovasculaire et le cycle cardiaque</p>
-            <div class="progress-bar">
-                <div class="progress-fill"></div>
-            </div>
-        </div>
 
-        <div class="content">
-            <div id="questionsArea"></div>
-            <div class="results-container" id="resultsContainer">
-                <h2 style="color: #667eea; margin-bottom: 20px;">Quiz Terminé! 🎉</h2>
-                <div class="score-circle">
-                    <div>
-                        <div class="score-text" id="finalScore">0</div>
-                        <div class="score-label">sur 20</div>
-                    </div>
-                </div>
-                <div class="results-message" id="resultMessage"></div>
-                <div class="results-details">
-                    <div class="detail-item">
-                        <span id="correctCount">Réponses correctes: 0</span>
-                    </div>
-                    <div class="detail-item">
-                        <span id="wrongCount">Réponses incorrectes: 0</span>
-                    </div>
-                    <div class="detail-item">
-                        <span id="percentage">Pourcentage: 0%</span>
-                    </div>
-                </div>
-                <button class="restart-button" onclick="location.reload()">Recommencer le Quiz</button>
-            </div>
-        </div>
-    </div>
+<div class="container">
+  <h1>Moyenne – 2ème Année Dentaire</h1>
+  <div class="subtitle">Les champs vides sont automatiquement comptés comme 0</div>
 
-    <script>
-        const questions = [
-            // Questions du Cours 1 (Physiologie du système cardiovasculaire)
-            {
-                id: 1,
-                text: "Quel est le poids du cœur chez un adulte?",
-                options: [
-                    "100 à 150 grammes",
-                    "250 à 350 grammes",
-                    "400 à 500 grammes",
-                    "500 à 600 grammes"
-                ],
-                correctAnswers: [1],
-                type: "single"
-            },
-            {
-                id: 2,
-                text: "Lequel des énoncés suivants décrit correctement le système cardiovasculaire?",
-                options: [
-                    "Il est composé des poumons et de la trachée uniquement",
-                    "Il est composé du cœur, des vaisseaux sanguins et des vaisseaux lymphatiques",
-                    "Il est composé du cerveau et des nerfs",
-                    "Il est composé de l'estomac et des intestins"
-                ],
-                correctAnswers: [1],
-                type: "single"
-            },
-            {
-                id: 3,
-                text: "Quels sont les rôles principaux du système cardiovasculaire? (Choisissez toutes les réponses correctes)",
-                options: [
-                    "Distribution des nutriments et de l'oxygène aux cellules",
-                    "Transport du dioxyde de carbone et des déchets",
-                    "Régulation de la température et du pH sanguin",
-                    "Stockage des aliments dans l'estomac"
-                ],
-                correctAnswers: [0, 1, 2],
-                type: "multiple"
-            },
-            {
-                id: 4,
-                text: "Combien de couches compose la paroi du cœur?",
-                options: [
-                    "Deux couches seulement",
-                    "Trois couches: le péricarde, le myocarde et l'endocarde",
-                    "Quatre couches",
-                    "Une seule couche"
-                ],
-                correctAnswers: [1],
-                type: "single"
-            },
-            {
-                id: 5,
-                text: "Quel tissu forme la majorité des parois des cavités cardiaques?",
-                options: [
-                    "Le tissu adipeux",
-                    "Le tissu nerveux",
-                    "Le tissu musculaire cardiaque (myocarde)",
-                    "Le tissu conjonctif"
-                ],
-                correctAnswers: [2],
-                type: "single"
-            },
-            {
-                id: 6,
-                text: "Quels sont les noms des valves atrioventriculaires? (Choisissez toutes les réponses correctes)",
-                options: [
-                    "La valve tricuspide (entre l'oreillette droite et le ventricule droit)",
-                    "La valve mitrale (entre l'oreillette gauche et le ventricule gauche)",
-                    "La valve aortique",
-                    "La valve pulmonaire"
-                ],
-                correctAnswers: [0, 1],
-                type: "multiple"
-            },
-            {
-                id: 7,
-                text: "Quel est le rôle des artères dans la circulation?",
-                options: [
-                    "Transporter le sang du cœur vers les tissus",
-                    "Transporter le sang des tissus vers le cœur",
-                    "Stocker le sang",
-                    "Filtrer le sang des déchets"
-                ],
-                correctAnswers: [0],
-                type: "single"
-            },
-            {
-                id: 8,
-                text: "Lequel des énoncés suivants décrit correctement la petite circulation (circulation pulmonaire)?",
-                options: [
-                    "Elle transporte le sang du cœur vers tous les tissus du corps",
-                    "Elle transporte le sang du ventricule droit aux poumons pour l'oxygénation",
-                    "Elle transporte le sang du foie au cœur",
-                    "Elle transporte le sang de l'estomac aux intestins"
-                ],
-                correctAnswers: [1],
-                type: "single"
-            },
-            {
-                id: 9,
-                text: "Quel est le rôle des artères coronaires?",
-                options: [
-                    "Transporter le sang aux poumons",
-                    "Transporter le sang au cerveau",
-                    "Nourrir le muscle cardiaque lui-même avec du sang et de l'oxygène",
-                    "Transporter le sang aux reins"
-                ],
-                correctAnswers: [2],
-                type: "single"
-            },
-            {
-                id: 10,
-                text: "Quelles sont les propriétés électrophysiologiques des cellules cardiaques? (Choisissez toutes les réponses correctes)",
-                options: [
-                    "L'excitabilité (capacité à répondre aux stimuli)",
-                    "La contractilité (capacité à se contracter)",
-                    "La conduction (transmission des signaux électriques)",
-                    "Le mouvement continu sans arrêt"
-                ],
-                correctAnswers: [0, 1, 2],
-                type: "multiple"
-            },
-            {
-                id: 11,
-                text: "Quel est le rôle du tissu nodal dans le cœur?",
-                options: [
-                    "Générer et conduire les potentiels d'action",
-                    "Stocker le sang",
-                    "Filtrer les déchets",
-                    "Sécréter les hormones"
-                ],
-                correctAnswers: [0],
-                type: "single"
-            },
-            {
-                id: 12,
-                text: "Lequel des vaisseaux sanguins suivants a le plus petit diamètre et permet l'échange de substances?",
-                options: [
-                    "Les artères",
-                    "Les veines",
-                    "Les artérioles",
-                    "Les capillaires"
-                ],
-                correctAnswers: [3],
-                type: "single"
-            },
-            {
-                id: 13,
-                text: "Quelle est la différence principale entre la grande circulation et la petite circulation? (Choisissez toutes les réponses correctes)",
-                options: [
-                    "La grande circulation transporte le sang vers tous les tissus du corps",
-                    "La petite circulation transporte le sang vers les poumons uniquement",
-                    "La grande circulation transporte du sang oxygéné",
-                    "La petite circulation transporte du sang désoxygéné"
-                ],
-                correctAnswers: [0, 1, 2, 3],
-                type: "multiple"
-            },
-            {
-                id: 14,
-                text: "Combien de valves se trouvent dans un cœur normal?",
-                options: [
-                    "Une seule valve",
-                    "Deux valves",
-                    "Trois valves",
-                    "Quatre valves"
-                ],
-                correctAnswers: [3],
-                type: "single"
-            },
-            {
-                id: 15,
-                text: "Quelles sont les quatre propriétés électrophysiologiques des cellules cardiaques?",
-                options: [
-                    "L'excitabilité, la contractilité, la conduction et l'automatisme",
-                    "L'excitabilité, la contractilité, la conduction et le mouvement",
-                    "L'excitabilité, la contractilité, la conduction et la contraction",
-                    "L'excitabilité, la contractilité, la conduction et la relaxation"
-                ],
-                correctAnswers: [0],
-                type: "single"
-            },
-            {
-                id: 16,
-                text: "Lequel des énoncés suivants décrit correctement la grande circulation?",
-                options: [
-                    "Elle commence du ventricule droit et se termine à l'oreillette droite",
-                    "Elle commence du ventricule gauche par l'aorte et se termine à l'oreillette droite",
-                    "Elle commence du ventricule droit et se termine à l'oreillette gauche",
-                    "Elle commence de l'oreillette gauche et se termine au ventricule gauche"
-                ],
-                correctAnswers: [1],
-                type: "single"
-            },
-            {
-                id: 17,
-                text: "Quel est le rôle des veines dans la circulation?",
-                options: [
-                    "Transporter le sang du cœur vers les tissus",
-                    "Transporter le sang des tissus vers le cœur",
-                    "Échanger les substances avec les tissus",
-                    "Stocker le sang"
-                ],
-                correctAnswers: [1],
-                type: "single"
-            },
-            {
-                id: 18,
-                text: "Lequel des énoncés suivants décrit correctement la petite circulation? (Choisissez toutes les réponses correctes)",
-                options: [
-                    "Elle commence du ventricule droit",
-                    "Elle se termine à l'oreillette gauche",
-                    "Elle passe par les poumons",
-                    "Elle transporte du sang désoxygéné du cœur aux poumons"
-                ],
-                correctAnswers: [0, 1, 2, 3],
-                type: "multiple"
-            },
-            {
-                id: 19,
-                text: "Que signifie le terme 'homéostasie' dans le contexte physiologique?",
-                options: [
-                    "Le mouvement continu du sang",
-                    "Le maintien de certaines valeurs physiologiques à un niveau constant",
-                    "La contraction du muscle cardiaque",
-                    "La dilatation des vaisseaux sanguins"
-                ],
-                correctAnswers: [1],
-                type: "single"
-            },
-            {
-                id: 20,
-                text: "Lequel des énoncés suivants décrit correctement l'innervation extrinsèque du cœur?",
-                options: [
-                    "Elle est contrôlée uniquement par le système nerveux central",
-                    "Elle est contrôlée par le système nerveux sympathique et parasympathique",
-                    "Il n'y a pas d'innervation extrinsèque",
-                    "Elle est contrôlée uniquement par le système nerveux somatique"
-                ],
-                correctAnswers: [1],
-                type: "single"
-            },
+  <div class="card">
+    <table>
+      <tr><th>Module</th><th>Coef</th><th>Note /20</th></tr>
 
-            // Questions du Cours 2 (Cycle cardiaque)
-            {
-                id: 21,
-                text: "Quelle est la durée d'un cycle cardiaque complet chez un adulte au repos?",
-                options: [
-                    "0,3 secondes",
-                    "0,5 secondes",
-                    "0,8 secondes",
-                    "1,2 secondes"
-                ],
-                correctAnswers: [2],
-                type: "single"
-            },
-            {
-                id: 22,
-                text: "Quelle est la durée de la systole par rapport à celle de la diastole dans un cycle cardiaque?",
-                options: [
-                    "La systole 0,3 s et la diastole 0,5 s",
-                    "La systole 0,5 s et la diastole 0,3 s",
-                    "Les deux sont égales",
-                    "La systole 0,8 s et la diastole 0,2 s"
-                ],
-                correctAnswers: [0],
-                type: "single"
-            },
-            {
-                id: 23,
-                text: "Quelles sont les phases du potentiel d'action dans les cellules cardiaques? (Choisissez toutes les réponses correctes)",
-                options: [
-                    "Phase 0: Dépolarisation rapide",
-                    "Phase 1: Repolarisation rapide",
-                    "Phase 2: Repolarisation lente (plateau)",
-                    "Phase 3: Repolarisation"
-                ],
-                correctAnswers: [0, 1, 2, 3],
-                type: "multiple"
-            },
-            {
-                id: 24,
-                text: "Quel est le rôle de la phase 0 du potentiel d'action dans les cellules cardiaques?",
-                options: [
-                    "Fermer les canaux sodiques",
-                    "Ouvrir les canaux sodiques et permettre l'entrée massive d'ions sodium",
-                    "Expulser les ions potassium",
-                    "Ouvrir les canaux calciques"
-                ],
-                correctAnswers: [1],
-                type: "single"
-            },
-            {
-                id: 25,
-                text: "Quel est le rôle de la phase 2 (plateau) du potentiel d'action?",
-                options: [
-                    "Dépolarisation rapide",
-                    "Équilibre entre l'entrée de sodium et de calcium et la sortie de potassium",
-                    "Repolarisation complète",
-                    "Fermeture de tous les canaux ioniques"
-                ],
-                correctAnswers: [1],
-                type: "single"
-            },
-            {
-                id: 26,
-                text: "Quelles sont les phases de la systole ventriculaire? (Choisissez toutes les réponses correctes)",
-                options: [
-                    "Phase de contraction isométrique",
-                    "Phase d'éjection",
-                    "Phase de relaxation isométrique",
-                    "Phase de remplissage"
-                ],
-                correctAnswers: [0, 1],
-                type: "multiple"
-            },
-            {
-                id: 27,
-                text: "Quand se produit le premier bruit cardiaque (B1)?",
-                options: [
-                    "À l'ouverture de la valve aortique",
-                    "À la fermeture des valves atrioventriculaires",
-                    "À l'ouverture de la valve pulmonaire",
-                    "À la fermeture de la valve aortique"
-                ],
-                correctAnswers: [1],
-                type: "single"
-            },
-            {
-                id: 28,
-                text: "Quand se produit le deuxième bruit cardiaque (B2)?",
-                options: [
-                    "À la fermeture des valves atrioventriculaires",
-                    "À l'ouverture de la valve aortique",
-                    "À la fermeture des valves sigmoïdes (aortique et pulmonaire)",
-                    "À l'ouverture de la valve pulmonaire"
-                ],
-                correctAnswers: [2],
-                type: "single"
-            },
-            {
-                id: 29,
-                text: "Quel est le volume de sang restant dans le ventricule après la contraction (volume télésystolique)?",
-                options: [
-                    "40 ml",
-                    "60 ml",
-                    "100 ml",
-                    "125 ml"
-                ],
-                correctAnswers: [1],
-                type: "single"
-            },
-            {
-                id: 30,
-                text: "Quel est le volume maximal de sang dans le ventricule avant la contraction (volume télédiastolique)?",
-                options: [
-                    "60 ml",
-                    "100 ml",
-                    "125 ml",
-                    "150 ml"
-                ],
-                correctAnswers: [2],
-                type: "single"
-            },
-            {
-                id: 31,
-                text: "Quel est le volume de sang éjecté par le ventricule à chaque contraction (volume d'éjection systolique)?",
-                options: [
-                    "40 ml",
-                    "60 ml",
-                    "65 ml",
-                    "100 ml"
-                ],
-                correctAnswers: [2],
-                type: "single"
-            },
-            {
-                id: 32,
-                text: "Quelles sont les phases de la diastole ventriculaire? (Choisissez toutes les réponses correctes)",
-                options: [
-                    "Phase de relaxation isométrique",
-                    "Phase de remplissage rapide",
-                    "Phase de remplissage lent (diastasis)",
-                    "Phase de remplissage actif (contraction auriculaire)"
-                ],
-                correctAnswers: [0, 1, 2, 3],
-                type: "multiple"
-            },
-            {
-                id: 33,
-                text: "Quel est le rôle de la valve mitrale (bicuspide) dans le cycle cardiaque?",
-                options: [
-                    "Séparer l'oreillette droite du ventricule droit",
-                    "Séparer l'oreillette gauche du ventricule gauche",
-                    "Séparer le ventricule gauche de l'aorte",
-                    "Séparer le ventricule droit de l'artère pulmonaire"
-                ],
-                correctAnswers: [1],
-                type: "single"
-            },
-            {
-                id: 34,
-                text: "Quels sont les événements qui se produisent pendant la phase d'éjection rapide du ventricule? (Choisissez toutes les réponses correctes)",
-                options: [
-                    "La valve aortique s'ouvre",
-                    "Le volume du ventricule diminue rapidement",
-                    "La pression du ventricule augmente rapidement",
-                    "La majorité du sang est éjectée en 250 millisecondes"
-                ],
-                correctAnswers: [0, 1, 3],
-                type: "multiple"
-            },
-            {
-                id: 35,
-                text: "Quel est le rôle de la valve tricuspide dans le cycle cardiaque?",
-                options: [
-                    "Séparer l'oreillette gauche du ventricule gauche",
-                    "Séparer l'oreillette droite du ventricule droit",
-                    "Séparer le ventricule gauche de l'aorte",
-                    "Séparer le ventricule droit de l'artère pulmonaire"
-                ],
-                correctAnswers: [1],
-                type: "single"
-            },
-            {
-                id: 36,
-                text: "Quelle est la plage de pression aortique normale?",
-                options: [
-                    "40 à 80 mmHg",
-                    "60 à 100 mmHg",
-                    "60 à 130 mmHg",
-                    "100 à 160 mmHg"
-                ],
-                correctAnswers: [2],
-                type: "single"
-            },
-            {
-                id: 37,
-                text: "Quelles sont les trois ondes qui apparaissent dans la courbe de pression auriculaire?",
-                options: [
-                    "L'onde a, l'onde b, l'onde c",
-                    "L'onde a, l'onde c, l'onde v",
-                    "L'onde x, l'onde y, l'onde z",
-                    "L'onde alpha, l'onde bêta, l'onde gamma"
-                ],
-                correctAnswers: [1],
-                type: "single"
-            },
-            {
-                id: 38,
-                text: "Quel est le rôle de l'onde (a) dans la courbe de pression auriculaire?",
-                options: [
-                    "Représente l'ouverture de la valve aortique",
-                    "Représente la contraction auriculaire",
-                    "Représente la fermeture de la valve mitrale",
-                    "Représente le remplissage de l'oreillette par les veines"
-                ],
-                correctAnswers: [1],
-                type: "single"
-            },
-            {
-                id: 39,
-                text: "Quel est l'effet de la propriété élastique de l'aorte (effet Windkessel) sur la circulation?",
-                options: [
-                    "Augmente la vitesse du flux sanguin",
-                    "Réduit la pression artérielle",
-                    "Convertit la circulation pulsatile en circulation régulière",
-                    "Augmente le volume sanguin"
-                ],
-                correctAnswers: [2],
-                type: "single"
-            },
-            {
-                id: 40,
-                text: "Quelle est l'importance de l'étude du cycle cardiaque dans la pratique médicale? (Choisissez toutes les réponses correctes)",
-                options: [
-                    "Aide à diagnostiquer les maladies cardiaques",
-                    "Aide à suivre les patients",
-                    "Aide à comprendre les mécanismes des maladies",
-                    "Aide à déterminer le type d'aliment approprié"
-                ],
-                correctAnswers: [0, 1, 2],
-                type: "multiple"
-            }
-        ];
+      <tr><td>Prothèse – Examen</td><td>1.66</td><td><input type="number" min="0" max="20" data-coef="1.66"></td></tr>
+      <tr><td>Prothèse – TP</td><td>3.33</td><td><input type="number" min="0" max="20" data-coef="3.33"></td></tr>
 
-        let currentQuestion = 0;
-        let userAnswers = [];
-        let score = 0;
+      <tr><td>OCE – Examen</td><td>1.66</td><td><input type="number" min="0" max="20" data-coef="1.66"></td></tr>
+      <tr><td>OCE – TP</td><td>3.33</td><td><input type="number" min="0" max="20" data-coef="3.33"></td></tr>
 
-        function initQuiz() {
-            userAnswers = new Array(questions.length).fill(null).map(() => []);
-            renderQuestion();
-        }
+      <tr><td>ODF</td><td>3</td><td><input type="number" min="0" max="20" data-coef="3"></td></tr>
+<tr><td>Microbiologie</td><td>2</td><td><input type="number" min="0" max="20" data-coef="2"></td></tr>
+      <tr><td>Anatomie humaine</td><td>4</td><td><input type="number" min="0" max="20" data-coef="4"></td></tr>
+      <tr><td>Anglais</td><td>1</td><td><input type="number" min="0" max="20" data-coef="1"></td></tr>
 
-        function renderQuestion() {
-            const question = questions[currentQuestion];
-            const container = document.getElementById('questionsArea');
-            
-            let optionsHTML = '';
-            const inputType = question.type === 'single' ? 'radio' : 'checkbox';
-            const inputName = `question-${currentQuestion}`;
+      <tr><td>Anadent – Examen</td><td>1</td><td><input type="number" min="0" max="20" data-coef="1"></td></tr>
+      <tr><td>Anadent – TP</td><td>2</td><td><input type="number" min="0" max="20" data-coef="2"></td></tr>
 
-            question.options.forEach((option, index) => {
-                const isChecked = userAnswers[currentQuestion].includes(index) ? 'checked' : '';
-                optionsHTML += `
-                    <label class="option">
-                        <input type="${inputType}" name="${inputName}" value="${index}" ${isChecked} onchange="handleOptionChange(${currentQuestion}, ${index}, this.type === 'checkbox')">
-                        <span>${option}</span>
-                    </label>
-                `;
-            });
+      <tr><td>Histologie</td><td>2</td><td><input type="number" min="0" max="20" data-coef="2"></td></tr>
+      <tr><td>Biomath Prothèse</td><td>2</td><td><input type="number" min="0" max="20" data-coef="2"></td></tr>
+      <tr><td>Physiologie spéciale</td><td>1</td><td><input type="number" min="0" max="20" data-coef="1"></td></tr>
+      <tr><td>Hygiène</td><td>1</td><td><input type="number" min="0" max="20" data-coef="1"></td></tr>
+      <tr><td>Immunologie</td><td>1</td><td><input type="number" min="0" max="20" data-coef="1"></td></tr>
+    </table>
+  </div>
 
-            const progressPercent = ((currentQuestion + 1) / questions.length) * 100;
-            document.querySelector('.progress-fill').style.width = progressPercent + '%';
+  <button class="btn" onclick="calculateAverage()">Calculer la moyenne</button>
 
-            container.innerHTML = `
-                <div class="question-container active">
-                    <div class="question-number">Question ${currentQuestion + 1} sur ${questions.length}</div>
-                    <div class="question-text">${question.text}</div>
-                    <div class="options">${optionsHTML}</div>
-                    <div class="feedback" id="feedback-${currentQuestion}"></div>
-                    <button class="check-button" onclick="checkAnswer(${currentQuestion})">Vérifier la réponse</button>
-                    <div class="navigation">
-                        <button class="nav-button" onclick="previousQuestion()" ${currentQuestion === 0 ? 'disabled' : ''}>Question Précédente</button>
-                        <button class="nav-button" onclick="nextQuestion()" ${currentQuestion === questions.length - 1 ? 'disabled' : ''}>Question Suivante</button>
-                    </div>
-                    <div class="question-counter">${currentQuestion + 1} / ${questions.length}</div>
-                </div>
-            `;
-        }
+  <div class="result" id="result"></div>
+  <div class="progress-container">
+    <div class="progress-bar" id="progressBar"></div>
+  </div>
+</div>
 
-        function handleOptionChange(questionIndex, optionIndex, isCheckbox) {
-            const question = questions[questionIndex];
-            if (isCheckbox) {
-                if (userAnswers[questionIndex].includes(optionIndex)) {
-                    userAnswers[questionIndex] = userAnswers[questionIndex].filter(i => i !== optionIndex);
-                } else {
-                    userAnswers[questionIndex].push(optionIndex);
-                }
-            } else {
-                userAnswers[questionIndex] = [optionIndex];
-            }
-        }
+<script>
+  function calculateAverage() {
+    const inputs = document.querySelectorAll('input');
+    let total = 0;
+    let coefSum = 0;
 
-        function checkAnswer(questionIndex) {
-            const question = questions[questionIndex];
-            const userAnswer = userAnswers[questionIndex];
-            const feedback = document.getElementById(`feedback-${questionIndex}`);
-            
-            // Disable all options after checking
-            const options = document.querySelectorAll(`input[name="question-${questionIndex}"]`);
-            options.forEach(option => {
-                option.parentElement.classList.add('disabled');
-            });
+    inputs.forEach(input => {
+      const value = parseFloat(input.value) || 0;
+      const coef = parseFloat(input.dataset.coef);
 
-            // Check if answer is correct
-            const isCorrect = userAnswer.length === question.correctAnswers.length &&
-                            userAnswer.every(ans => question.correctAnswers.includes(ans));
+      // Highlight grades < 10
+      input.classList.remove('low');
+      if (value > 0 && value < 10) input.classList.add('low');
 
-            if (isCorrect) {
-                score += 0.5;
-                feedback.className = 'feedback show correct';
-                feedback.innerHTML = `
-                    <div class="feedback-message">✓ Réponse correcte! Excellent!</div>
-                    <div class="correct-answer">Réponse correcte: ${question.correctAnswers.map(i => question.options[i]).join(' et ')}</div>
-                `;
-                userAnswer.forEach(ans => {
-                    document.querySelector(`input[name="question-${questionIndex}"][value="${ans}"]`).parentElement.classList.add('correct');
-                });
-            } else {
-                feedback.className = 'feedback show incorrect';
-                const correctAnswersText = question.correctAnswers.map(i => question.options[i]).join(' et ');
-                feedback.innerHTML = `
-                    <div class="feedback-message">✗ Réponse incorrecte. Essayez à nouveau!</div>
-                    <div class="correct-answer">Réponse correcte: ${correctAnswersText}</div>
-                `;
-                userAnswer.forEach(ans => {
-                    document.querySelector(`input[name="question-${questionIndex}"][value="${ans}"]`).parentElement.classList.add('incorrect');
-                });
-                question.correctAnswers.forEach(ans => {
-                    if (!userAnswer.includes(ans)) {
-                        document.querySelector(`input[name="question-${questionIndex}"][value="${ans}"]`).parentElement.classList.add('correct');
-                    }
-                });
-            }
+      total += value * coef;
+      coefSum += coef;
+    });
 
-            // Disable check button
-            event.target.disabled = true;
-        }
+    const average = coefSum ? (total / coefSum) : 0;
+    const avgRounded = average.toFixed(2);
 
-        function nextQuestion() {
-            if (currentQuestion < questions.length - 1) {
-                currentQuestion++;
-                renderQuestion();
-            } else {
-                showResults();
-            }
-        }
+    document.getElementById('result').innerText = Votre moyenne est : ${avgRounded} / 20;
 
-        function previousQuestion() {
-            if (currentQuestion > 0) {
-                currentQuestion--;
-                renderQuestion();
-            }
-        }
+    // Progress bar
+    const progress = Math.min((average / 20) * 100, 100);
+    const bar = document.getElementById('progressBar');
+    bar.style.width = progress + '%';
 
-        function showResults() {
-            document.getElementById('questionsArea').innerHTML = '';
-            document.querySelector('.progress-fill').style.width = '100%';
-            
-            const totalQuestions = questions.length;
-            const correctCount = Math.round(score);
-            const wrongCount = totalQuestions - correctCount;
-            const percentage = Math.round((score / totalQuestions) * 100);
-            const finalScore = (score / totalQuestions) * 20;
+    if (average >= 10) {
+      bar.classList.add('progress-pass');
+    } else {
+      bar.classList.remove('progress-pass');
+    }
+  }
+</script>
 
-            let message = '';
-            if (finalScore >= 18) {
-                message = 'Performance excellente! Vous êtes un expert! 🌟';
-            } else if (finalScore >= 15) {
-                message = 'Performance excellente! Continuez à vous améliorer! 🎯';
-            } else if (finalScore >= 12) {
-                message = 'Très bonne performance! Vous pouvez faire mieux. 💪';
-            } else if (finalScore >= 10) {
-                message = 'Bonne performance! Concentrez-vous sur les points faibles. 📚';
-            } else if (finalScore >= 7) {
-                message = 'Performance moyenne. Étudiez davantage et réessayez! 📖';
-            } else {
-                message = 'Performance faible. Concentrez-vous sur l\'étude! 💡';
-            }
-
-            document.getElementById('resultsContainer').classList.add('show');
-            document.getElementById('finalScore').textContent = finalScore.toFixed(1);
-            document.getElementById('resultMessage').textContent = message;
-            document.getElementById('correctCount').textContent = `Réponses correctes: ${correctCount} sur ${totalQuestions}`;
-            document.getElementById('wrongCount').textContent = `Réponses incorrectes: ${wrongCount} sur ${totalQuestions}`;
-            document.getElementById('percentage').textContent = `Pourcentage: ${percentage}%`;
-        }
-
-        // Initialize quiz on page load
-        window.addEventListener('DOMContentLoaded', initQuiz);
-    </script>
 </body>
 </html>
